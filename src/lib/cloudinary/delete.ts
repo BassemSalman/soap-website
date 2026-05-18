@@ -1,0 +1,1 @@
+export { deleteImage } from "./upload";

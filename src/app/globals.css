@@ -1,26 +1,334 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ─── Habibti Design Tokens ─── */
+:root {
+  /* Short aliases (used in shared components and design) */
+  --cream:        #F5EFE6;
+  --cream-soft:   #FAF6F0;
+  --cream-deep:   #ECE3D2;
+  --sage:         #A8B89A;
+  --sage-deep:    #7A8A6A;
+  --sage-soft:    #C8D4BC;
+  --sage-wash:    #E4EADB;
+  --pink:         #E8C5B8;
+  --pink-deep:    #C99B8C;
+  --pink-soft:    #F4DCD3;
+  --pink-wash:    #FBEBE4;
+  --beige:        #D4B896;
+  --beige-soft:   #E5D3B5;
+  --brown:        #5C4A3A;
+  --brown-soft:   #8A7563;
+  --ink:          #2A2218;
+  --ink-soft:     #4A3E2E;
+  --paper:        #FFFCF7;
+  --line:         #E2D8C7;
+  --line-soft:    #EDE5D5;
+  --serif:        var(--font-fraunces), "Cormorant Garamond", Georgia, serif;
+  --sans:         var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --r-xs:         8px;
+  --r-sm:         12px;
+  --r:            16px;
+  --r-lg:         22px;
+  --r-xl:         32px;
+  --r-pill:       999px;
+  --shadow-sm:    0 1px 2px rgba(92,74,58,0.06), 0 1px 1px rgba(92,74,58,0.04);
+  --shadow:       0 8px 22px -10px rgba(92,74,58,0.18), 0 2px 6px rgba(92,74,58,0.05);
+  --shadow-lg:    0 24px 50px -20px rgba(92,74,58,0.25);
+
+  --hbt-cream:        #F5EFE6;
+  --hbt-cream-soft:   #FAF6F0;
+  --hbt-cream-deep:   #ECE3D2;
+  --hbt-sage:         #A8B89A;
+  --hbt-sage-deep:    #7A8A6A;
+  --hbt-sage-soft:    #C8D4BC;
+  --hbt-sage-wash:    #E4EADB;
+  --hbt-pink:         #E8C5B8;
+  --hbt-pink-deep:    #C99B8C;
+  --hbt-pink-soft:    #F4DCD3;
+  --hbt-pink-wash:    #FBEBE4;
+  --hbt-beige:        #D4B896;
+  --hbt-beige-soft:   #E5D3B5;
+  --hbt-brown:        #5C4A3A;
+  --hbt-brown-soft:   #8A7563;
+  --hbt-ink:          #2A2218;
+  --hbt-ink-soft:     #4A3E2E;
+  --hbt-paper:        #FFFCF7;
+  --hbt-line:         #E2D8C7;
+  --hbt-line-soft:    #EDE5D5;
+  --hbt-serif:        var(--font-fraunces), "Cormorant Garamond", Georgia, serif;
+  --hbt-sans:         var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --hbt-r-xs:         8px;
+  --hbt-r-sm:         12px;
+  --hbt-r:            16px;
+  --hbt-r-lg:         22px;
+  --hbt-r-xl:         32px;
+  --hbt-r-pill:       999px;
+  --hbt-shadow-sm:    0 1px 2px rgba(92,74,58,0.06), 0 1px 1px rgba(92,74,58,0.04);
+  --hbt-shadow:       0 8px 22px -10px rgba(92,74,58,0.18), 0 2px 6px rgba(92,74,58,0.05);
+  --hbt-shadow-lg:    0 24px 50px -20px rgba(92,74,58,0.25);
+}
+
+.hbt-crochet-band {
+  height: 12px;
+  background-image:
+    radial-gradient(circle at 6px 6px, var(--hbt-sage-deep) 0 2px, transparent 2px),
+    radial-gradient(circle at 18px 6px, transparent 0 2px, var(--hbt-sage-soft) 2px 4px, transparent 4px);
+  background-size: 24px 12px;
+  background-repeat: repeat-x;
+  opacity: 0.55;
+}
+
+.hbt-eyebrow {
+  font-family: var(--hbt-sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--hbt-sage-deep);
+}
+
+.hbt-h-display {
+  font-family: var(--hbt-serif);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.hbt-h-display em {
+  font-style: italic;
+  color: var(--hbt-sage-deep);
+}
+
+.hbt-h-section {
+  font-family: var(--hbt-serif);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* ─── Habibti Utility Classes ─── */
+.btn {
+  font-family: var(--hbt-sans);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 22px;
+  border-radius: var(--hbt-r-pill);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn-primary { background: var(--hbt-brown); color: var(--hbt-cream-soft); }
+.btn-primary:hover { background: var(--hbt-ink); box-shadow: var(--hbt-shadow); }
+.btn-sage { background: var(--hbt-sage-deep); color: var(--hbt-cream-soft); }
+.btn-sage:hover { background: #677857; }
+.btn-pink { background: var(--hbt-pink-deep); color: var(--hbt-cream-soft); }
+.btn-pink:hover { background: #B58879; }
+.btn-outline {
+  background: transparent;
+  color: var(--hbt-ink);
+  border: 1.5px solid var(--hbt-brown);
+}
+.btn-outline:hover { background: var(--hbt-brown); color: var(--hbt-cream-soft); }
+.btn-ghost { background: transparent; color: var(--hbt-ink); }
+.btn-ghost:hover { background: var(--hbt-cream-deep); }
+.btn-lg { padding: 16px 32px; font-size: 15px; }
+.btn-sm { padding: 8px 16px; font-size: 13px; }
+.btn-block { width: 100%; justify-content: center; }
+
+.hbt-input {
+  width: 100%;
+  font-family: var(--hbt-sans);
+  font-size: 14px;
+  padding: 13px 16px;
+  border-radius: var(--hbt-r-sm);
+  border: 1.5px solid var(--hbt-line);
+  background: var(--hbt-paper);
+  color: var(--hbt-ink);
+  outline: none;
+  transition: border .15s ease, box-shadow .15s ease;
+}
+.hbt-input:focus { border-color: var(--hbt-sage-deep); box-shadow: 0 0 0 3px var(--hbt-sage-wash); }
+.hbt-input::placeholder { color: var(--hbt-brown-soft); }
+
+.hbt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--hbt-r-pill);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--hbt-cream-deep);
+  color: var(--hbt-brown);
+}
+.hbt-badge-sage { background: var(--hbt-sage-wash); color: var(--hbt-sage-deep); }
+.hbt-badge-pink { background: var(--hbt-pink-wash); color: var(--hbt-pink-deep); }
+.hbt-badge-cream { background: var(--hbt-cream-deep); color: var(--hbt-brown); }
+
+.hbt-eyebrow {
+  font-family: var(--hbt-sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--hbt-sage-deep);
+}
+
+/* Sprig bullet */
+.hbt-sprig::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237A8A6A' stroke-width='1.5' stroke-linecap='round'><path d='M12 22 V4'/><path d='M12 9 C8 7 6 5 6 5'/><path d='M12 13 C16 11 18 9 18 9'/><path d='M12 6 C9 5 7.5 3 7.5 3'/></svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: -3px;
+  margin-right: 6px;
+}
+
+@keyframes hbt-chat-in {
+  from { opacity: 0; transform: translateY(12px) scale(.96); transform-origin: bottom right; }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes hbt-dots {
+  0%, 80%, 100% { opacity: .25; transform: translateY(0); }
+  40%           { opacity: 1;   transform: translateY(-3px); }
 }

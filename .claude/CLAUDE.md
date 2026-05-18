@@ -130,3 +130,83 @@ Pre-launch under this brand. The team already sells products under a different b
 - Stock management
 - Basic accounting and reporting
 - **Manual order entry:** Log orders placed outside the website (e.g. WhatsApp, in-person) directly from the admin panel — same DB record and tracking as website orders
+
+### Progress
+
+Infrastructure
+
+- Next.js 16 + TypeScript + Tailwind v4 + shadcn/ui bootstrapped
+- All dependencies installed (NextAuth v5, Prisma v7, Neon, Cloudinary, Resend, Anthropic SDK, Zod)
+
+Database
+
+- Full Prisma schema — 20 models, all migrated to Neon ✓
+- Users, Auth (Google + Email OTP), Products (bilingual), Categories, Cart, Orders, Baskets, Promo Codes,
+  Raw Materials, Costing, Chat, Site Settings
+
+Backend structure
+
+- src/lib/ — db, auth, cloudinary, resend, claude, whatsapp, i18n (EN+AR), utils
+- src/features/ — 12 feature folders with Zod schemas + stubbed actions/queries
+- src/auth.ts — NextAuth v5 config
+- src/middleware.ts — route protection for /admin, /account, /checkout
+- src/types/ — NextAuth type augmentation, BasketConfig type
+- Chat API route (/api/chat) — Claude Haiku streaming
+
+---
+
+Done ✅
+
+- All 9 pages with real data fetching
+- All UI components (homepage, shop, product detail, cart, checkout, basket builder, account, admin)
+- Backend: products, cart, checkout (with atomic order transaction), orders, reports, promo codes, raw materials
+- Auth sign-in page (polished UI)
+- Chat API route (streaming Claude Haiku)
+- Admin panel (dashboard, products, orders, reports, raw materials, promo codes)  
+
+
+---
+
+What's left
+
+Critical (blocking launch)
+
+┌─────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐  
+ │ # │ Task │  
+ ├─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  
+ │ 1 │ Env vars — 10 missing: GOOGLE_CLIENT_ID/SECRET, RESEND_API_KEY, ANTHROPIC_API_KEY, NEXT_PUBLIC_WHATSAPP_NUMBER, │
+│ │ Cloudinary vars │  
+ ├─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  
+ │ 2 │ Wire ChatWidget — component is done but never rendered in any layout │  
+ ├─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  
+ │ 3 │ Basket-builder actions — src/features/basket-builder/ is an empty stub (add/remove items to basket in cart) │
+└─────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Important (pre-launch quality)
+
+┌─────┬─────────────────────────────────────────────────────────────────────────────────────┐  
+ │ # │ Task │  
+ ├─────┼─────────────────────────────────────────────────────────────────────────────────────┤
+│ 4 │ Auth pages — verify-request and error pages are 12-line stubs, need proper styling │
+├─────┼─────────────────────────────────────────────────────────────────────────────────────┤
+│ 5 │ Product detail page — src/app/(shop)/products/[slug]/page.tsx needs a check │  
+ ├─────┼─────────────────────────────────────────────────────────────────────────────────────┤  
+ │ 6 │ Admin CRUD forms — tables exist but no create/edit modals wired up │  
+ ├─────┼─────────────────────────────────────────────────────────────────────────────────────┤  
+ │ 7 │ Costing feature — src/features/costing/ is empty (needed for profit margin reports) │  
+ └─────┴─────────────────────────────────────────────────────────────────────────────────────┘
+
+Later (post-launch)
+
+┌─────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐  
+ │ # │ Task │  
+ ├─────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤  
+ │ 8 │ i18n — Arabic translations exist (en.json/ar.json) but next-intl is not wired; components use hardcoded English │  
+ ├─────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 9 │ Cloudinary image upload in admin product form │  
+ └─────┴─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+---
+
+The core customer flow (browse → cart → checkout → WhatsApp order) is fully implemented. The biggest blockers are env vars and
+the chat widget not being rendered anywhere.

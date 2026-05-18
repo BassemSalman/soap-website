@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "products": "المنتجات",
+    "basket": "بناء سلة هدايا",
+    "cart": "السلة",
+    "account": "حسابي",
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج"
+  },
+  "product": {
+    "addToCart": "أضف إلى السلة",
+    "outOfStock": "غير متوفر",
+    "benefits": "الفوائد",
+    "ingredients": "المكونات",
+    "forWho": "لمن هذا المنتج؟"
+  },
+  "cart": {
+    "empty": "سلتك فارغة",
+    "checkout": "إتمام الطلب",
+    "total": "الإجمالي",
+    "subtotal": "المجموع",
+    "shipping": "الشحن",
+    "discount": "الخصم"
+  },
+  "checkout": {
+    "title": "إتمام الطلب",
+    "placeOrder": "أرسل الطلب عبر واتساب",
+    "cashOnDelivery": "الدفع عند الاستلام"
+  },
+  "basket": {
+    "title": "بناء سلة هدايا",
+    "selectProducts": "اختر المنتجات (2–5)",
+    "chooseLetter": "اختر حرف الكيس",
+    "writeCard": "اكتب رسالة بطاقة (اختياري)",
+    "addToCart": "أضف السلة إلى الطلب"
+  }
+}
