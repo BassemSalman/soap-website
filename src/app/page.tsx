@@ -6,6 +6,8 @@ import { Footer } from "@/components/layout/footer";
 import { WhatsappButton } from "@/components/shared/whatsapp-button";
 import { HomepageClient } from "@/components/home/homepage-client";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Habibti — Organic Handmade Soap & Skincare from Beirut",
   description:

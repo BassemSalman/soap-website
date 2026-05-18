@@ -3,6 +3,8 @@ import { getProducts } from "@/features/products/queries";
 import { getCategories } from "@/features/categories/queries";
 import { ShopClient } from "@/components/shop/shop-client";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Shop — Habibti Organic Soap & Skincare",
   description:
