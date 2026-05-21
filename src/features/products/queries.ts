@@ -39,13 +39,7 @@ export async function getProducts(opts?: {
         ? {
             OR: [
               { name_en: { contains: opts.search, mode: "insensitive" } },
-              { name_ar: { contains: opts.search, mode: "insensitive" } },
-              {
-                description_en: {
-                  contains: opts.search,
-                  mode: "insensitive",
-                },
-              },
+              { description_en: { contains: opts.search, mode: "insensitive" } },
             ],
           }
         : {}),

@@ -12,7 +12,6 @@ interface RawMaterial {
   id: string;
   sku: string;
   name_en: string;
-  name_ar: string;
   unit: string;
   costPerUnit: unknown;
   stockQty: unknown;
@@ -80,7 +79,6 @@ function AddMaterialDialog({ onClose }: { onClose: () => void }) {
     const fd = new FormData(e.currentTarget);
     const input = {
       name_en: fd.get("name_en") as string,
-      name_ar: fd.get("name_ar") as string,
       sku: fd.get("sku") as string,
       unit: fd.get("unit") as string,
       costPerUnit: fd.get("costPerUnit") as string,
@@ -169,12 +167,8 @@ function AddMaterialDialog({ onClose }: { onClose: () => void }) {
         >
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
-              <label style={fieldLabelStyle}>Name (EN)</label>
+              <label style={fieldLabelStyle}>Name</label>
               <input name="name_en" required style={inputStyle} />
-            </div>
-            <div>
-              <label style={fieldLabelStyle}>Name (AR)</label>
-              <input name="name_ar" required style={inputStyle} />
             </div>
             <div>
               <label style={fieldLabelStyle}>SKU</label>
@@ -502,9 +496,6 @@ export function RawMaterialsTable({ materials, lowStock }: Props) {
                     <td style={{ padding: "10px 10px", verticalAlign: "middle" }}>
                       <div style={{ fontWeight: 600, color: "var(--hbt-ink)" }}>
                         {mat.name_en}
-                      </div>
-                      <div style={{ fontSize: 11, color: "var(--hbt-brown-soft)" }}>
-                        {mat.name_ar}
                       </div>
                     </td>
 

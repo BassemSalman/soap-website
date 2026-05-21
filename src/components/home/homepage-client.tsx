@@ -10,15 +10,13 @@ import { IconArrow, IconGift } from "@/components/shared/icons";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type ProductImage = { url: string; isPrimary: boolean; sortOrder: number };
-type ProductCategory = { category: { slug: string; name_en: string; name_ar: string } };
+type ProductCategory = { category: { slug: string; name_en: string } };
 
 export type HomepageProduct = {
   id: string;
   slug: string;
   name_en: string;
-  name_ar: string;
   description_en: string | null;
-  description_ar: string | null;
   basePrice: string;
   salePrice: string | null;
   isOnSale: boolean;
@@ -32,7 +30,6 @@ export type HomepageCategory = {
   id: string;
   slug: string;
   name_en: string;
-  name_ar: string;
   imageUrl: string | null;
   _count: { products: number };
 };
@@ -273,6 +270,57 @@ function SectionHeader({
   );
 }
 
+// ─── Wave divider ────────────────────────────────────────────────────────────
+
+function WaveDivider({ upper, lower, flip = false }: { upper: string; lower: string; flip?: boolean }) {
+  return (
+    <div style={{ background: upper, lineHeight: 0, fontSize: 0, display: "block", transform: flip ? "scaleX(-1)" : undefined }}>
+      <svg
+        viewBox="0 0 1440 50"
+        preserveAspectRatio="none"
+        style={{ display: "block", width: "100%", height: 50 }}
+        aria-hidden="true"
+      >
+        <path d="M0,25 C360,50 1080,0 1440,25 L1440,50 L0,50 Z" style={{ fill: lower }} />
+      </svg>
+    </div>
+  );
+}
+
+// ─── Hero sparkles ────────────────────────────────────────────────────────────
+
+function HeroSparkles() {
+  const sparks = [
+    { top: "13%", left: "38%", size: 13 },
+    { top: "8%",  left: "22%", size: 8 },
+    { top: "54%", left: "6%",  size: 11 },
+    { top: "36%", left: "50%", size: 7 },
+    { top: "72%", left: "42%", size: 9 },
+    { top: "20%", left: "64%", size: 6 },
+  ];
+  return (
+    <>
+      {sparks.map((s, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            top: s.top,
+            left: s.left,
+            pointerEvents: "none",
+            opacity: 0.38,
+            zIndex: 0,
+          }}
+        >
+          <svg viewBox="0 0 24 24" width={s.size} height={s.size} fill="#7A8A6A">
+            <path d="M12 2 L13.2 9.8 L20 12 L13.2 14.2 L12 22 L10.8 14.2 L4 12 L10.8 9.8 Z" />
+          </svg>
+        </div>
+      ))}
+    </>
+  );
+}
+
 // ─── Category card ────────────────────────────────────────────────────────────
 
 function CategoryCard({
@@ -365,6 +413,11 @@ export function HomepageClient({ featuredProducts, categories }: HomepageClientP
           style={{ position: "absolute", bottom: 20, left: -30, opacity: 0.35, width: 180 }}
           variant="b"
         />
+        <BotanicalAccent
+          style={{ position: "absolute", top: "30%", left: "28%", opacity: 0.2, width: 100 }}
+          variant="d"
+        />
+        <HeroSparkles />
         <div style={{
           maxWidth: 1280, margin: "0 auto",
           display: "grid",
@@ -399,13 +452,22 @@ export function HomepageClient({ featuredProducts, categories }: HomepageClientP
                 onClick={() => router.push("/products")}
                 className="btn btn-primary btn-lg"
               >
-                Shop now <IconArrow />
+                Shop now! <IconArrow />
               </button>
               <button
                 onClick={() => router.push("/basket-builder")}
                 className="btn btn-outline btn-lg"
               >
-                <IconGift /> Build a gift basket
+                <IconGift /> Gift someone
+              </button>
+              <button
+                onClick={() => {
+                  const num = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";
+                  window.open(`https://wa.me/${num}?text=Hi%2C%20I%27d%20like%20to%20discuss%20a%20bulk%20order%20or%20event%20package.`, "_blank");
+                }}
+                className="btn btn-outline btn-lg"
+              >
+                Planning an event? Let&apos;s talk
               </button>
             </div>
             {/* Social proof */}
@@ -432,6 +494,8 @@ export function HomepageClient({ featuredProducts, categories }: HomepageClientP
           <HeroCollage isDesktop={isDesktop} />
         </div>
       </section>
+
+      <WaveDivider upper="#F5EFE6" lower="#FAF6F0" />
 
       {/* ── CATEGORIES ── */}
       <section style={{
@@ -509,6 +573,8 @@ export function HomepageClient({ featuredProducts, categories }: HomepageClientP
         </div>
       </section>
 
+      <WaveDivider upper="#FAF6F0" lower="#E4EADB" flip />
+
       {/* ── GIFT SPOTLIGHT ── */}
       <section style={{
         padding: isDesktop ? "88px 32px" : "56px 20px",
@@ -573,8 +639,10 @@ export function HomepageClient({ featuredProducts, categories }: HomepageClientP
         </div>
       </section>
 
+      <WaveDivider upper="#E4EADB" lower="#FFFCF7" />
+
       {/* ── FEATURED PRODUCTS ── */}
-      <section style={{ padding: isDesktop ? "72px 32px" : "44px 20px" }}>
+      <section style={{ padding: isDesktop ? "72px 32px" : "44px 20px", background: "#FFFCF7" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div style={{
             display: "flex",
@@ -621,11 +689,13 @@ export function HomepageClient({ featuredProducts, categories }: HomepageClientP
       </section>
 
       {/* ── TRUST ROW ── */}
-      <section style={{ padding: isDesktop ? "0 32px 72px" : "0 20px 44px" }}>
+      <section style={{ padding: isDesktop ? "0 32px 72px" : "0 20px 44px", background: "#FFFCF7" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <TrustRow isDesktop={isDesktop} />
         </div>
       </section>
+
+      <WaveDivider upper="#FFFCF7" lower="#5C4A3A" flip />
 
       {/* ── STORY STRIP ── */}
       <section style={{
@@ -634,7 +704,37 @@ export function HomepageClient({ featuredProducts, categories }: HomepageClientP
         color: "var(--hbt-cream-soft)",
         position: "relative", overflow: "hidden",
       }}>
-        <div style={{ maxWidth: 920, margin: "0 auto", textAlign: "center" }}>
+        {/* Giant faded opening-quote background glyph */}
+        <div style={{
+          position: "absolute",
+          top: isDesktop ? -30 : -10,
+          left: isDesktop ? 32 : 12,
+          fontFamily: "var(--hbt-serif)",
+          fontSize: isDesktop ? 280 : 180,
+          lineHeight: 1,
+          color: "var(--hbt-cream-soft)",
+          opacity: 0.05,
+          pointerEvents: "none",
+          userSelect: "none",
+        }}>
+          &ldquo;
+        </div>
+        <BotanicalAccent
+          variant="a"
+          color="rgba(250,246,240,0.22)"
+          style={{ position: "absolute", top: -10, right: 16, width: 130, opacity: 0.7 }}
+        />
+        <BotanicalAccent
+          variant="b"
+          color="rgba(250,246,240,0.18)"
+          style={{ position: "absolute", bottom: -10, left: 8, width: 110, opacity: 0.6 }}
+        />
+        <BotanicalAccent
+          variant="c"
+          color="rgba(250,246,240,0.15)"
+          style={{ position: "absolute", bottom: 20, right: "12%", width: 70, opacity: 0.5 }}
+        />
+        <div style={{ maxWidth: 920, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
           <div className="hbt-eyebrow" style={{ color: "var(--hbt-sage)", marginBottom: 18 }}>
             Our story, in three lines
           </div>

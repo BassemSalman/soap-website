@@ -25,7 +25,6 @@ interface Product {
   id: string;
   sku: string;
   name_en: string;
-  name_ar: string;
   slug: string;
   type: string;
   basePrice: unknown;
@@ -74,7 +73,6 @@ function AddProductDialog({ onClose }: { onClose: () => void }) {
       sku: fd.get("sku") as string,
       type: fd.get("type") as string,
       name_en: fd.get("name_en") as string,
-      name_ar: fd.get("name_ar") as string,
       slug: fd.get("slug") as string,
       basePrice: fd.get("basePrice") as string,
       stockQty: Number(fd.get("stockQty")),
@@ -159,8 +157,7 @@ function AddProductDialog({ onClose }: { onClose: () => void }) {
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {[
             { name: "sku", label: "SKU", required: true },
-            { name: "name_en", label: "Name (EN)", required: true },
-            { name: "name_ar", label: "Name (AR)", required: true },
+            { name: "name_en", label: "Name", required: true },
             { name: "slug", label: "Slug (leave blank to auto-generate)" },
             { name: "basePrice", label: "Base price (e.g. 12.99)", required: true },
             { name: "stockQty", label: "Stock qty", type: "number" },

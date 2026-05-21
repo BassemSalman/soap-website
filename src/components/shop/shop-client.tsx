@@ -11,15 +11,13 @@ import {
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type ProductImage = { url: string; isPrimary: boolean; sortOrder: number };
-type ProductCategoryRef = { category: { slug: string; name_en: string; name_ar: string } };
+type ProductCategoryRef = { category: { slug: string; name_en: string } };
 
 export type ShopProduct = {
   id: string;
   slug: string;
   name_en: string;
-  name_ar: string;
   description_en: string | null;
-  description_ar: string | null;
   basePrice: string;
   salePrice: string | null;
   isOnSale: boolean;
@@ -33,7 +31,6 @@ export type ShopCategory = {
   id: string;
   slug: string;
   name_en: string;
-  name_ar: string;
   imageUrl: string | null;
   _count: { products: number };
 };
@@ -381,8 +378,8 @@ export function ShopClient({ products, categories }: ShopClientProps) {
           {/* Grid */}
           <div style={{
             display: "grid",
-            gridTemplateColumns: isDesktop ? "repeat(3, 1fr)" : "repeat(2, 1fr)",
-            gap: isDesktop ? 20 : 12,
+            gridTemplateColumns: isDesktop ? "repeat(4, 1fr)" : "repeat(3, 1fr)",
+            gap: isDesktop ? 16 : 10,
           }}>
             {filtered.map((p) => (
               <ProductCard

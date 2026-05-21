@@ -47,15 +47,12 @@ const cartBadgeStyle: React.CSSProperties = {
 };
 
 const navLinks = [
-  { href: "/products",        label: "Shop" },
-  { href: "/basket-builder",  label: "Build a Gift" },
-  { href: "/",                label: "Our Story" },
-  { href: "/",                label: "Journal" },
+  { href: "/products",       label: "Shop" },
+  { href: "/basket-builder", label: "Gift someone" },
 ];
 
 export function Header({ cartCount = 0 }: HeaderProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [lang, setLang] = useState<"EN" | "AR">("EN");
   const pathname = usePathname();
 
   return (
@@ -114,26 +111,6 @@ export function Header({ cartCount = 0 }: HeaderProps) {
           </nav>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <button
-              onClick={() => setLang(lang === "EN" ? "AR" : "EN")}
-              style={{
-                border: "1px solid var(--hbt-line)",
-                borderRadius: 999,
-                padding: "6px 10px",
-                fontSize: 12,
-                fontWeight: 600,
-                background: "var(--hbt-paper)",
-                display: "flex",
-                gap: 4,
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-            >
-              <span style={{ color: lang === "EN" ? "var(--hbt-ink)" : "var(--hbt-brown-soft)" }}>EN</span>
-              <span style={{ color: "var(--hbt-brown-soft)" }}>/</span>
-              <span style={{ color: lang === "AR" ? "var(--hbt-ink)" : "var(--hbt-brown-soft)" }}>عربي</span>
-            </button>
-
             <a
               href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? ""}`}
               target="_blank"
@@ -280,23 +257,6 @@ export function Header({ cartCount = 0 }: HeaderProps) {
             ))}
           </nav>
 
-          <div style={{ marginTop: "auto", paddingTop: 24 }}>
-            <button
-              onClick={() => setLang(lang === "EN" ? "AR" : "EN")}
-              style={{
-                border: "1px solid var(--hbt-line)",
-                borderRadius: 999,
-                padding: "10px 16px",
-                background: "var(--hbt-paper)",
-                fontFamily: "var(--hbt-sans)",
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: "pointer",
-              }}
-            >
-              {lang === "EN" ? "Switch to عربي" : "Switch to English"}
-            </button>
-          </div>
         </div>
       )}
     </>

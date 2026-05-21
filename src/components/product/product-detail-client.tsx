@@ -15,21 +15,16 @@ import { addToCart } from "@/features/cart/actions";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type ProductImage = { url: string; isPrimary: boolean; sortOrder: number };
-type ProductCategoryRef = { category: { slug: string; name_en: string; name_ar: string } };
+type ProductCategoryRef = { category: { slug: string; name_en: string } };
 
 export type DetailProduct = {
   id: string;
   slug: string;
   name_en: string;
-  name_ar: string;
   description_en: string | null;
-  description_ar: string | null;
   benefits_en: string | null;
-  benefits_ar: string | null;
   ingredients_en: string | null;
-  ingredients_ar: string | null;
   targetAudience_en: string | null;
-  targetAudience_ar: string | null;
   basePrice: string;
   salePrice: string | null;
   isOnSale: boolean;
@@ -45,9 +40,7 @@ export type RelatedProduct = {
   id: string;
   slug: string;
   name_en: string;
-  name_ar: string;
   description_en: string | null;
-  description_ar: string | null;
   basePrice: string;
   salePrice: string | null;
   isOnSale: boolean;

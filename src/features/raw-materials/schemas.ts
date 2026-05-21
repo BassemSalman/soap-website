@@ -3,7 +3,6 @@ import { UnitType } from "@/generated/prisma";
 
 export const RawMaterialCreateSchema = z.object({
   name_en: z.string().min(1),
-  name_ar: z.string().min(1),
   sku: z.string().min(1),
   unit: z.nativeEnum(UnitType),
   costPerUnit: z.string().regex(/^\d+(\.\d{1,4})?$/),

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { addToCart } from "@/features/cart/actions";
+import { BAG_SIZES, type BagSizeId } from "@/features/basket-builder/schemas";
 import {
   IconCheck,
   IconArrow,
@@ -16,14 +17,12 @@ interface Product {
   id: string;
   slug: string;
   name_en: string;
-  name_ar: string;
   basePrice: string | number;
   salePrice?: string | number | null;
   isOnSale: boolean;
   images?: { url: string; isPrimary: boolean }[];
   swatch?: string | null;
-  // From getProducts: categories is an array of join rows
-  categories?: { category: { name_en: string; name_ar: string } }[];
+  categories?: { category: { name_en: string } }[];
 }
 
 interface CardState {
@@ -36,7 +35,7 @@ interface BasketBuilderClientProps {
   products: Product[];
 }
 
-// ─── Bag color config ─────────────────────────────────────────────────────────
+// ─── Bag config ───────────────────────────────────────────────────────────────
 
 const BAG_COLORS = [
   { id: "sage",  name: "Sage",        fill: "#A8B89A" },
@@ -45,6 +44,7 @@ const BAG_COLORS = [
   { id: "cream", name: "Cream",       fill: "#ECE3D2" },
 ] as const;
 type BagColorId = (typeof BAG_COLORS)[number]["id"];
+
 
 const CARD_MAX = 280;
 
@@ -175,59 +175,49 @@ function Step1Pick({
 }) {
   return (
     <div>
-      <div style={{ marginBottom: 18 }}>
-        <h2
-          className="hbt-h-section"
-          style={{ fontSize: 22, color: "var(--hbt-ink)" }}
-        >
-          Pick 2 to 5 products
+      <div style={{ marginBottom: 16 }}>
+        <h2 className="hbt-h-section" style={{ fontSize: 22, color: "var(--hbt-ink)" }}>
+          What would you like to include?
         </h2>
         <p style={{ color: "var(--hbt-brown-soft)", fontSize: 14, marginTop: 4 }}>
-          Mix anything — soaps, creams, serums, loafs. They&apos;ll all fit in the bag.
+          Pick anything — soaps, creams, serums. Mix and match freely.
         </p>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
-          gap: 10,
-        }}
-        className="sm:grid-cols-3 lg:grid-cols-4"
-      >
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
         {products.map((p) => {
           const picked = picks.includes(p.id);
-          const disabled = !picked && picks.length >= 5;
           const price = p.isOnSale && p.salePrice ? Number(p.salePrice) : Number(p.basePrice);
           const primaryImg = p.images?.find((i) => i.isPrimary) ?? p.images?.[0];
 
           return (
             <button
               key={p.id}
-              onClick={() => !disabled && togglePick(p.id)}
-              disabled={disabled}
+              onClick={() => togglePick(p.id)}
               style={{
-                background: "var(--hbt-paper)",
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                padding: "10px 14px",
+                background: picked ? "var(--hbt-sage-wash)" : "var(--hbt-paper)",
                 borderRadius: "var(--hbt-r-lg)",
-                border: picked
-                  ? "2.5px solid var(--hbt-sage-deep)"
-                  : "2.5px solid transparent",
-                overflow: "hidden",
-                padding: 0,
-                cursor: disabled ? "not-allowed" : "pointer",
-                opacity: disabled ? 0.45 : 1,
-                position: "relative",
+                border: `1.5px solid ${picked ? "var(--hbt-sage-deep)" : "var(--hbt-line-soft)"}`,
+                cursor: "pointer",
                 textAlign: "left",
-                transition: "transform .15s ease, border-color .15s ease",
+                transition: "background .12s ease, border-color .12s ease",
+                width: "100%",
               }}
             >
-              {/* Image */}
+              {/* Thumbnail */}
               <div
                 style={{
-                  aspectRatio: "1/1",
+                  width: 48,
+                  height: 48,
+                  borderRadius: 10,
                   background: p.swatch ?? "var(--hbt-cream-deep)",
-                  position: "relative",
+                  flexShrink: 0,
                   overflow: "hidden",
+                  position: "relative",
                 }}
               >
                 {primaryImg && (
@@ -235,57 +225,49 @@ function Step1Pick({
                     src={primaryImg.url}
                     alt={p.name_en}
                     fill
-                    sizes="(max-width: 640px) 50vw, 25vw"
+                    sizes="48px"
                     className="object-cover"
                   />
                 )}
-                {picked && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 10,
-                      right: 10,
-                      width: 28,
-                      height: 28,
-                      borderRadius: 999,
-                      background: "var(--hbt-sage-deep)",
-                      color: "white",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: "2px solid white",
-                    }}
-                  >
-                    <IconCheck size={16} />
+              </div>
+
+              {/* Name + category */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{
+                  fontFamily: "var(--hbt-serif)",
+                  fontSize: 15,
+                  fontWeight: 500,
+                  color: "var(--hbt-ink)",
+                  lineHeight: 1.2,
+                }}>
+                  {p.name_en}
+                </div>
+                {p.categories?.[0]?.category.name_en && (
+                  <div style={{ fontSize: 11, color: "var(--hbt-brown-soft)", marginTop: 2 }}>
+                    {p.categories[0].category.name_en}
                   </div>
                 )}
               </div>
 
-              {/* Info */}
-              <div style={{ padding: 12 }}>
-                <div
-                  style={{
-                    fontFamily: "var(--hbt-serif)",
-                    fontSize: 15,
-                    fontWeight: 500,
-                    lineHeight: 1.15,
-                    color: "var(--hbt-ink)",
-                  }}
-                >
-                  {p.name_en}
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginTop: 4,
-                  }}
-                >
-                  <span style={{ fontSize: 11, color: "var(--hbt-brown-soft)" }}>
-                    {p.categories?.[0]?.category.name_en ?? ""}
-                  </span>
-                  <span style={{ fontSize: 13, fontWeight: 600 }}>${price}</span>
-                </div>
+              {/* Price */}
+              <div style={{ fontSize: 14, fontWeight: 600, color: "var(--hbt-ink)", flexShrink: 0 }}>
+                ${price}
+              </div>
+
+              {/* Check indicator */}
+              <div style={{
+                width: 22,
+                height: 22,
+                borderRadius: 999,
+                border: `1.5px solid ${picked ? "var(--hbt-sage-deep)" : "var(--hbt-line)"}`,
+                background: picked ? "var(--hbt-sage-deep)" : "transparent",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                transition: "background .12s ease, border-color .12s ease",
+              }}>
+                {picked && <span style={{ color: "white", display: "flex" }}><IconCheck size={12} /></span>}
               </div>
             </button>
           );
@@ -298,190 +280,201 @@ function Step1Pick({
 // ─── Step 2: Choose Bag ───────────────────────────────────────────────────────
 
 function Step2Bag({
+  wantBag,
+  setWantBag,
   letter,
   setLetter,
   bagColor,
   setBagColor,
+  bagSize,
+  setBagSize,
 }: {
+  wantBag: boolean;
+  setWantBag: (v: boolean) => void;
   letter: string;
   setLetter: (l: string) => void;
   bagColor: BagColorId;
   setBagColor: (c: BagColorId) => void;
+  bagSize: BagSizeId;
+  setBagSize: (s: BagSizeId) => void;
 }) {
   const fill = BAG_COLORS.find((c) => c.id === bagColor)?.fill ?? "#A8B89A";
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr",
-        gap: 24,
-      }}
-      className="md:grid-cols-2 md:gap-12"
-    >
-      {/* Bag preview */}
-      <div
-        style={{
-          background: "var(--hbt-cream)",
-          borderRadius: "var(--hbt-r-xl)",
-          padding: 28,
-          aspectRatio: "1/1",
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          border: "1px solid var(--hbt-line-soft)",
-        }}
-      >
-        <div style={{ position: "relative", width: "80%", aspectRatio: "1/1.05" }}>
-          {/* Bag body */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: fill,
-              borderRadius: "30% 30% 18% 18%",
-              boxShadow: "var(--hbt-shadow-lg)",
-              backgroundImage:
-                "radial-gradient(circle at 8px 8px, rgba(92,74,58,0.18) 0 2.5px, transparent 2.5px)",
-              backgroundSize: "20px 20px",
-            }}
-          />
-          {/* Handle */}
-          <div
-            style={{
-              position: "absolute",
-              left: "20%",
-              right: "20%",
-              top: "-4%",
-              height: "16%",
-              borderTop: "5px solid var(--hbt-brown)",
-              borderLeft: "5px solid var(--hbt-brown)",
-              borderRight: "5px solid var(--hbt-brown)",
-              borderRadius: "999px 999px 0 0",
-            }}
-          />
-          {/* Letter */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontFamily: "var(--hbt-serif)",
-              fontStyle: "italic",
-              fontSize: 130,
-              fontWeight: 400,
-              color: "var(--hbt-brown)",
-              opacity: 0.7,
-              letterSpacing: "-0.04em",
-            }}
-          >
-            {letter}
+    <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+      {/* ── Want a bag? toggle ── */}
+      <div style={{
+        background: "var(--hbt-paper)",
+        borderRadius: "var(--hbt-r-lg)",
+        border: "1px solid var(--hbt-line-soft)",
+        overflow: "hidden",
+      }}>
+        <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--hbt-line-soft)" }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--hbt-brown)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
+            Crochet bag
+          </div>
+          <div style={{ fontSize: 14, color: "var(--hbt-brown-soft)" }}>
+            Hand-crocheted by aunties in our neighbourhood — optional but makes it a proper gift.
           </div>
         </div>
-      </div>
-
-      {/* Picker */}
-      <div>
-        <h2
-          className="hbt-h-section"
-          style={{ fontSize: 22, marginBottom: 6, color: "var(--hbt-ink)" }}
-        >
-          Choose their letter
-        </h2>
-        <p style={{ color: "var(--hbt-brown-soft)", fontSize: 14, marginBottom: 20 }}>
-          Hand-crocheted by aunties in our neighbourhood — 1 to 2 days per bag.
-        </p>
-
-        {/* A–Z grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(8, 1fr)",
-            gap: 4,
-            marginBottom: 24,
-          }}
-        >
-          {Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map((L) => (
+        <div style={{ display: "flex" }}>
+          {[true, false].map((val) => (
             <button
-              key={L}
-              onClick={() => setLetter(L)}
+              key={String(val)}
+              onClick={() => setWantBag(val)}
               style={{
-                aspectRatio: "1/1",
-                borderRadius: 10,
-                border:
-                  letter === L
-                    ? "2px solid var(--hbt-brown)"
-                    : "1.5px solid var(--hbt-line)",
-                background:
-                  letter === L ? "var(--hbt-brown)" : "var(--hbt-paper)",
-                color:
-                  letter === L ? "var(--hbt-cream-soft)" : "var(--hbt-ink)",
-                fontFamily: "var(--hbt-serif)",
-                fontSize: 16,
-                fontWeight: 500,
+                flex: 1,
+                padding: "14px 20px",
+                background: wantBag === val ? "var(--hbt-sage-wash)" : "var(--hbt-paper)",
+                border: "none",
+                borderRight: val ? "1px solid var(--hbt-line-soft)" : "none",
+                color: wantBag === val ? "var(--hbt-sage-deep)" : "var(--hbt-ink-soft)",
+                fontWeight: wantBag === val ? 700 : 500,
+                fontSize: 14,
                 cursor: "pointer",
+                transition: "background .15s",
               }}
             >
-              {L}
-            </button>
-          ))}
-        </div>
-
-        {/* Color swatches */}
-        <div
-          style={{
-            fontSize: 12,
-            fontWeight: 600,
-            color: "var(--hbt-brown)",
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-            marginBottom: 10,
-          }}
-        >
-          Bag colour
-        </div>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          {BAG_COLORS.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => setBagColor(c.id)}
-              style={{
-                padding: "4px 4px 4px 6px",
-                borderRadius: 999,
-                border:
-                  bagColor === c.id
-                    ? "2px solid var(--hbt-brown)"
-                    : "1.5px solid var(--hbt-line)",
-                background: "var(--hbt-paper)",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                cursor: "pointer",
-                fontSize: 13,
-                fontWeight: 600,
-              }}
-            >
-              <span
-                style={{
-                  width: 22,
-                  height: 22,
-                  borderRadius: 999,
-                  background: c.fill,
-                  backgroundImage:
-                    "radial-gradient(circle at 4px 4px, rgba(92,74,58,0.2) 0 1.5px, transparent 1.5px)",
-                  backgroundSize: "8px 8px",
-                  border: "1px solid rgba(92,74,58,0.18)",
-                  display: "inline-block",
-                }}
-              />
-              {c.name}
+              {val ? "Yes, add a bag" : "No bag — just the products"}
             </button>
           ))}
         </div>
       </div>
+
+      {wantBag && (
+        <div
+          style={{ display: "grid", gridTemplateColumns: "1fr", gap: 24 }}
+          className="md:grid-cols-2 md:gap-12"
+        >
+          {/* Bag preview */}
+          <div style={{
+            background: "var(--hbt-cream)",
+            borderRadius: "var(--hbt-r-xl)",
+            padding: 28,
+            aspectRatio: "1/1",
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: "1px solid var(--hbt-line-soft)",
+          }}>
+            <div style={{ position: "relative", width: "80%", aspectRatio: "1/1.05" }}>
+              <div style={{
+                position: "absolute", inset: 0,
+                background: fill,
+                borderRadius: "30% 30% 18% 18%",
+                boxShadow: "var(--hbt-shadow-lg)",
+                backgroundImage: "radial-gradient(circle at 8px 8px, rgba(92,74,58,0.18) 0 2.5px, transparent 2.5px)",
+                backgroundSize: "20px 20px",
+              }} />
+              <div style={{
+                position: "absolute", left: "20%", right: "20%", top: "-4%", height: "16%",
+                borderTop: "5px solid var(--hbt-brown)",
+                borderLeft: "5px solid var(--hbt-brown)",
+                borderRight: "5px solid var(--hbt-brown)",
+                borderRadius: "999px 999px 0 0",
+              }} />
+              <div style={{
+                position: "absolute", inset: 0,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontFamily: "var(--hbt-serif)", fontStyle: "italic",
+                fontSize: 130, fontWeight: 400,
+                color: "var(--hbt-brown)", opacity: 0.7, letterSpacing: "-0.04em",
+              }}>
+                {letter}
+              </div>
+            </div>
+          </div>
+
+          {/* Pickers */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            {/* Size */}
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: "var(--hbt-brown)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
+                Bag size
+              </div>
+              <div style={{ display: "flex", gap: 8 }}>
+                {BAG_SIZES.map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => setBagSize(s.id)}
+                    style={{
+                      flex: 1,
+                      padding: "10px 8px",
+                      borderRadius: "var(--hbt-r-sm)",
+                      border: bagSize === s.id ? "2px solid var(--hbt-brown)" : "1.5px solid var(--hbt-line)",
+                      background: bagSize === s.id ? "var(--hbt-brown)" : "var(--hbt-paper)",
+                      color: bagSize === s.id ? "var(--hbt-cream-soft)" : "var(--hbt-ink)",
+                      cursor: "pointer",
+                      textAlign: "center" as const,
+                    }}
+                  >
+                    <div style={{ fontFamily: "var(--hbt-serif)", fontSize: 18, fontWeight: 500 }}>{s.label}</div>
+                    <div style={{ fontSize: 11, opacity: 0.75, marginTop: 2 }}>{s.note}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, marginTop: 4 }}>+${s.price}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Letter */}
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: "var(--hbt-brown)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
+                Initial
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(8, 1fr)", gap: 4, marginBottom: 24 }}>
+                {Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map((L) => (
+                  <button
+                    key={L}
+                    onClick={() => setLetter(L)}
+                    style={{
+                      aspectRatio: "1/1", borderRadius: 10,
+                      border: letter === L ? "2px solid var(--hbt-brown)" : "1.5px solid var(--hbt-line)",
+                      background: letter === L ? "var(--hbt-brown)" : "var(--hbt-paper)",
+                      color: letter === L ? "var(--hbt-cream-soft)" : "var(--hbt-ink)",
+                      fontFamily: "var(--hbt-serif)", fontSize: 16, fontWeight: 500, cursor: "pointer",
+                    }}
+                  >
+                    {L}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Colour */}
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: "var(--hbt-brown)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
+                Bag colour
+              </div>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                {BAG_COLORS.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => setBagColor(c.id)}
+                    style={{
+                      padding: "4px 4px 4px 6px", borderRadius: 999,
+                      border: bagColor === c.id ? "2px solid var(--hbt-brown)" : "1.5px solid var(--hbt-line)",
+                      background: "var(--hbt-paper)",
+                      display: "flex", alignItems: "center", gap: 8,
+                      cursor: "pointer", fontSize: 13, fontWeight: 600,
+                    }}
+                  >
+                    <span style={{
+                      width: 22, height: 22, borderRadius: 999,
+                      background: c.fill,
+                      backgroundImage: "radial-gradient(circle at 4px 4px, rgba(92,74,58,0.2) 0 1.5px, transparent 1.5px)",
+                      backgroundSize: "8px 8px",
+                      border: "1px solid rgba(92,74,58,0.18)",
+                      display: "inline-block",
+                    }} />
+                    {c.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -712,6 +705,8 @@ function Step4Review({
   card,
   total,
   products,
+  wantBag,
+  bagSize,
 }: {
   picks: string[];
   letter: string;
@@ -719,7 +714,10 @@ function Step4Review({
   card: CardState;
   total: number;
   products: Product[];
+  wantBag: boolean;
+  bagSize: BagSizeId;
 }) {
+  const bagPrice = wantBag ? (BAG_SIZES.find((s) => s.id === bagSize)?.price ?? 8) : 0;
   const colorFill = BAG_COLORS.find((c) => c.id === bagColor)?.fill ?? "#A8B89A";
   const pickedProducts = picks.map((id) => products.find((p) => p.id === id)).filter(Boolean) as Product[];
 
@@ -837,18 +835,20 @@ function Step4Review({
             <span>Products subtotal</span>
             <span>${total}</span>
           </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              fontSize: 14,
-              marginTop: 6,
-              color: "var(--hbt-ink)",
-            }}
-          >
-            <span>Crochet bag + card</span>
-            <span>$8</span>
-          </div>
+          {wantBag && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontSize: 14,
+                marginTop: 6,
+                color: "var(--hbt-ink)",
+              }}
+            >
+              <span>Crochet bag ({bagSize}) + card</span>
+              <span>${bagPrice}</span>
+            </div>
+          )}
           <div
             style={{
               display: "flex",
@@ -861,7 +861,7 @@ function Step4Review({
             }}
           >
             <span>Total</span>
-            <span>${total + 8}</span>
+            <span>${total + bagPrice}</span>
           </div>
         </div>
 
@@ -879,49 +879,54 @@ function Step4Review({
             gap: 16,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <div
-              style={{
-                width: 60,
-                aspectRatio: "1/1.05",
-                background: colorFill,
-                borderRadius: "30% 30% 18% 18%",
-                backgroundImage:
-                  "radial-gradient(circle at 6px 6px, rgba(92,74,58,0.2) 0 1.5px, transparent 1.5px)",
-                backgroundSize: "12px 12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontFamily: "var(--hbt-serif)",
-                fontStyle: "italic",
-                fontSize: 32,
-                color: "var(--hbt-brown)",
-              }}
-            >
-              {letter}
-            </div>
-            <div>
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: "var(--hbt-brown)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  marginBottom: 2,
-                }}
-              >
-                The bag
+          {wantBag ? (
+            <>
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div
+                  style={{
+                    width: 60,
+                    aspectRatio: "1/1.05",
+                    background: colorFill,
+                    borderRadius: "30% 30% 18% 18%",
+                    backgroundImage:
+                      "radial-gradient(circle at 6px 6px, rgba(92,74,58,0.2) 0 1.5px, transparent 1.5px)",
+                    backgroundSize: "12px 12px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: "var(--hbt-serif)",
+                    fontStyle: "italic",
+                    fontSize: 32,
+                    color: "var(--hbt-brown)",
+                  }}
+                >
+                  {letter}
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 600,
+                      color: "var(--hbt-brown)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.08em",
+                      marginBottom: 2,
+                    }}
+                  >
+                    The bag
+                  </div>
+                  <div style={{ fontFamily: "var(--hbt-serif)", fontSize: 18, color: "var(--hbt-ink)" }}>
+                    Initial {letter}, {bagColor} · {bagSize}
+                  </div>
+                </div>
               </div>
-              <div
-                style={{ fontFamily: "var(--hbt-serif)", fontSize: 18, color: "var(--hbt-ink)" }}
-              >
-                Initial {letter}, {bagColor}
-              </div>
+              <hr style={{ height: 1, background: "var(--hbt-line-soft)", border: 0 }} />
+            </>
+          ) : (
+            <div style={{ fontFamily: "var(--hbt-serif)", fontStyle: "italic", fontSize: 16, color: "var(--hbt-brown-soft)" }}>
+              No crochet bag — just the products, packed and ready.
             </div>
-          </div>
-
-          <hr style={{ height: 1, background: "var(--hbt-line-soft)", border: 0 }} />
+          )}
 
           {(card.message || card.to) && (
             <div
@@ -988,18 +993,22 @@ export function BasketBuilderClient({ products }: BasketBuilderClientProps) {
 
   const [step, setStep] = useState(1);
   const [picks, setPicks] = useState<string[]>([]);
+  const [wantBag, setWantBag] = useState(true);
   const [letter, setLetter] = useState("L");
   const [bagColor, setBagColor] = useState<BagColorId>("sage");
+  const [bagSize, setBagSize] = useState<BagSizeId>("M");
   const [card, setCard] = useState<CardState>({ to: "", from: "", message: "" });
   const [error, setError] = useState<string | null>(null);
 
   const togglePick = (id: string) => {
     if (picks.includes(id)) {
       setPicks(picks.filter((p) => p !== id));
-    } else if (picks.length < 5) {
+    } else {
       setPicks([...picks, id]);
     }
   };
+
+  const bagPrice = wantBag ? (BAG_SIZES.find((s) => s.id === bagSize)?.price ?? 8) : 0;
 
   const total = picks.reduce((sum, id) => {
     const p = products.find((x) => x.id === id);
@@ -1009,9 +1018,9 @@ export function BasketBuilderClient({ products }: BasketBuilderClientProps) {
   }, 0);
 
   const canNext =
-    (step === 1 && picks.length >= 2) ||
+    (step === 1 && picks.length >= 1) ||
     step === 2 ||
-    (step === 3 && card.to.trim().length > 0 && card.message.trim().length > 0);
+    (step === 3 && (!wantBag || (card.to.trim().length > 0 && card.message.trim().length > 0)));
 
   async function handleAddToCart() {
     setError(null);
@@ -1027,6 +1036,8 @@ export function BasketBuilderClient({ products }: BasketBuilderClientProps) {
             selectedProductIds: picks,
             bagLetter: letter,
             cardMessage: card.message || undefined,
+            wantBag,
+            bagSize: wantBag ? bagSize : undefined,
           },
         });
 
@@ -1043,7 +1054,7 @@ export function BasketBuilderClient({ products }: BasketBuilderClientProps) {
   }
 
   const stepLabels: Record<number, string> = {
-    1: `${picks.length}/5 picked`,
+    1: picks.length === 0 ? "Nothing selected yet" : `${picks.length} item${picks.length !== 1 ? "s" : ""} selected`,
     2: `Bag — initial ${letter}`,
     3: "Your card",
     4: "Ready to send",
@@ -1110,10 +1121,14 @@ export function BasketBuilderClient({ products }: BasketBuilderClientProps) {
         )}
         {step === 2 && (
           <Step2Bag
+            wantBag={wantBag}
+            setWantBag={setWantBag}
             letter={letter}
             setLetter={setLetter}
             bagColor={bagColor}
             setBagColor={setBagColor}
+            bagSize={bagSize}
+            setBagSize={setBagSize}
           />
         )}
         {step === 3 && (
@@ -1127,6 +1142,8 @@ export function BasketBuilderClient({ products }: BasketBuilderClientProps) {
             card={card}
             total={total}
             products={products}
+            wantBag={wantBag}
+            bagSize={bagSize}
           />
         )}
 
@@ -1189,7 +1206,7 @@ export function BasketBuilderClient({ products }: BasketBuilderClientProps) {
                 color: "var(--hbt-ink)",
               }}
             >
-              ${total + 8}{" "}
+              ${total + bagPrice}{" "}
               <span
                 style={{
                   fontSize: 12,
@@ -1197,7 +1214,7 @@ export function BasketBuilderClient({ products }: BasketBuilderClientProps) {
                   fontWeight: 400,
                 }}
               >
-                incl. bag &amp; card
+                {wantBag ? "incl. bag & card" : "products only"}
               </span>
             </div>
           </div>

@@ -1,7 +1,4 @@
 import { getProducts } from "@/features/products/queries";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { WhatsappButton } from "@/components/shared/whatsapp-button";
 import { BasketBuilderClient } from "@/components/basket-builder/basket-builder-client";
 
 export const metadata = {
@@ -12,14 +9,5 @@ export const metadata = {
 
 export default async function BasketBuilderPage() {
   const products = await getProducts({ limit: 20 });
-  return (
-    <>
-      <Header />
-      <main>
-        <BasketBuilderClient products={products} />
-      </main>
-      <Footer />
-      <WhatsappButton />
-    </>
-  );
+  return <BasketBuilderClient products={products} />;
 }

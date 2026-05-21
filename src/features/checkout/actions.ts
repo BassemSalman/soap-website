@@ -132,7 +132,6 @@ export async function placeOrder(input: unknown) {
                   : item.product.basePrice
               ) * item.quantity,
             productName_en: item.product.name_en,
-            productName_ar: item.product.name_ar,
             basketConfig: item.basketConfig ?? undefined,
           })),
         },

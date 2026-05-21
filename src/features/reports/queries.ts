@@ -37,7 +37,6 @@ export async function getLowStockProducts() {
     select: {
       id: true,
       name_en: true,
-      name_ar: true,
       stockQty: true,
       lowStockThreshold: true,
     },

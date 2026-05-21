@@ -1,9 +1,6 @@
-export function formatCurrency(
-  amount: number | string,
-  locale: "en" | "ar" = "en"
-): string {
+export function formatCurrency(amount: number | string): string {
   const num = typeof amount === "string" ? parseFloat(amount) : amount;
-  return new Intl.NumberFormat(locale === "ar" ? "ar-LB" : "en-LB", {
+  return new Intl.NumberFormat("en-LB", {
     style: "currency",
     currency: "LBP",
     minimumFractionDigits: 0,

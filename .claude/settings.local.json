@@ -33,7 +33,9 @@
       "Bash(/usr/bin/curl -s -o /dev/null -w \"%{http_code} /basket-builder\\\\n\" http://localhost:3000/basket-builder)",
       "Bash(/usr/bin/curl -s -o /dev/null -w \"%{http_code} /auth/sign-in\\\\n\" http://localhost:3000/auth/sign-in)",
       "Bash(grep process.env /Users/bassem/Repositories/soap-website/src/**/*.ts /Users/bassem/Repositories/soap-website/src/**/*.tsx)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(xargs cat)",
+      "Bash(grep -Ev '\\(href=\"\\\\/\\)|\\(href=\"/products\\)|\\(href=\"/basket\\)|\\(href=\"/cart\\)|\\(href=\"/checkout\\)|\\(href=\"/account\\)|\\(href=\"/admin\\)|\\(href=\"/auth\\)|\\(href=\"https\\)|\\(href=\\\\`\\)')"
     ]
   }
 }

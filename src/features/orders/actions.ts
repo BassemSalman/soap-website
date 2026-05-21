@@ -144,7 +144,6 @@ export async function createManualOrder(input: unknown) {
               unitPrice,
               lineTotal: unitPrice * item.quantity,
               productName_en: product.name_en,
-              productName_ar: product.name_ar,
             };
           }),
         },

@@ -24,7 +24,6 @@ interface CartItem {
   product: {
     id: string;
     name_en: string;
-    name_ar: string;
     basePrice: string | number;
     salePrice?: string | number | null;
     isOnSale: boolean;

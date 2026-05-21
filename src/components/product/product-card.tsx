@@ -8,30 +8,25 @@ interface ProductCardProps {
     id: string;
     slug: string;
     name_en: string;
-    name_ar: string;
     description_en?: string | null;
-    description_ar?: string | null;
-    category?: string; // display category name
+    category?: string;
     basePrice: string | number;
     salePrice?: string | number | null;
     isOnSale: boolean;
     images?: { url: string; isPrimary: boolean }[];
-    swatch?: string; // fallback color
+    swatch?: string;
   };
   compact?: boolean;
-  locale?: "en" | "ar";
   onAdd?: (productId: string) => void;
 }
 
 export function ProductCard({
   product,
   compact = false,
-  locale = "en",
   onAdd,
 }: ProductCardProps) {
-  const name = locale === "ar" ? product.name_ar : product.name_en;
-  const description =
-    locale === "ar" ? product.description_ar : product.description_en;
+  const name = product.name_en;
+  const description = product.description_en;
 
   const primaryImage = product.images?.find((img) => img.isPrimary);
   const firstImage = product.images?.[0];

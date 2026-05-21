@@ -1,3 +1,14 @@
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import { WhatsappButton } from "@/components/shared/whatsapp-button";
+
 export default function ShopLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <Header />
+      <main>{children}</main>
+      <Footer />
+      <WhatsappButton />
+    </>
+  );
 }

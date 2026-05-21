@@ -3,9 +3,7 @@ import { z } from "zod";
 export const CategoryCreateSchema = z.object({
   slug: z.string().min(1),
   name_en: z.string().min(1),
-  name_ar: z.string().min(1),
   description_en: z.string().optional(),
-  description_ar: z.string().optional(),
   imageUrl: z.string().url().optional(),
   sortOrder: z.number().int().default(0),
   isActive: z.boolean().default(true),

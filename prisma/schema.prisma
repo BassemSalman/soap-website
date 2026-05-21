@@ -29,17 +29,6 @@ model Account {
   @@index([userId])
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-}
-
 model VerificationToken {
   identifier String
   token      String   @unique
@@ -67,7 +56,6 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   accounts  Account[]
-  sessions  Session[]
   cart      Cart?
   orders    Order[]
   addresses Address[]
@@ -99,9 +87,7 @@ model Category {
   id             String   @id @default(cuid())
   slug           String   @unique
   name_en        String
-  name_ar        String
   description_en String?
-  description_ar String?
   imageUrl       String?
   sortOrder      Int      @default(0)
   isActive       Boolean  @default(true)
@@ -128,15 +114,10 @@ model Product {
   sku               String      @unique
   type              ProductType
   name_en           String
-  name_ar           String
   description_en    String?     @db.Text
-  description_ar    String?     @db.Text
   benefits_en       String?     @db.Text
-  benefits_ar       String?     @db.Text
   ingredients_en    String?     @db.Text
-  ingredients_ar    String?     @db.Text
   targetAudience_en String?
-  targetAudience_ar String?
   slug              String      @unique
   basePrice         Decimal     @db.Decimal(10, 2)
   salePrice         Decimal?    @db.Decimal(10, 2)
@@ -183,7 +164,6 @@ model ProductImage {
   cloudinaryId String
   url          String
   alt_en       String?
-  alt_ar       String?
   width        Int?
   height       Int?
   sortOrder    Int      @default(0)
@@ -209,7 +189,6 @@ enum UnitType {
 model RawMaterial {
   id           String   @id @default(cuid())
   name_en      String
-  name_ar      String
   sku          String   @unique
   unit         UnitType
   costPerUnit  Decimal  @db.Decimal(10, 4)
@@ -397,7 +376,6 @@ model OrderItem {
   unitPrice      Decimal @db.Decimal(10, 2)
   lineTotal      Decimal @db.Decimal(10, 2)
   productName_en String
-  productName_ar String
   basketConfig   Json?
 
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
@@ -419,37 +397,6 @@ model OrderStatusHistory {
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@index([orderId])
-}
-
-// ─── CHATBOT ──────────────────────────────────────────────────────────────────
-
-enum MessageRole {
-  USER
-  ASSISTANT
-}
-
-model ChatSession {
-  id        String   @id @default(cuid())
-  userId    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  messages ChatMessage[]
-
-  @@index([userId])
-}
-
-model ChatMessage {
-  id        String      @id @default(cuid())
-  sessionId String
-  role      MessageRole
-  content   String      @db.Text
-  createdAt DateTime    @default(now())
-
-  session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-
-  @@index([sessionId])
-  @@index([createdAt])
 }
 
 // ─── SITE SETTINGS ────────────────────────────────────────────────────────────

@@ -1,7 +1,10 @@
-export type { Locale } from "@/lib/i18n/config";
+import type { BagSizeId } from "@/features/basket-builder/schemas";
+export type { BagSizeId };
 
 export type BasketConfig = {
   selectedProductIds: string[];
   bagLetter: string;
   cardMessage?: string;
+  wantBag?: boolean;
+  bagSize?: BagSizeId;
 };
